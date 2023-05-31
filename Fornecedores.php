@@ -27,11 +27,22 @@
         <link href="../base/css/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" href="../base/formulario7/formulario/css/jquery.idealforms.css">
         <link rel="stylesheet" href="css/style_Fornecedores.css" type="text/css">
+        <link rel="stylesheet" href="../BASE/cssGeral.css" type="text/css">
     </head>
     <?php
-    include "../base/conexao_teste.php";
+    include "../base/conexao_martdb.php";
     include "../BASE/conexao_tovs.php";
     include "../MobileNav/docs/index_menucomlogin.php";
+    include "config/php/fornecedoresCrud.php";
+    //$buscarAcordoPorTipo = buscarAcordoPorTipo($oracle);
+    $datas = new Data();
+    $dataIniciomes =  $datas->dataIniciomes();
+    $dataFimMes = $datas->dataFimMes();
+
+    $acordos = new Acordo();
+    $buscarAcordoPorTipo = $acordos->buscarAcordoPorTipo($oracle);
+    $tipoDeContrato = $acordos->tipoDeContrato($oracle);
+
     ?>
 
 <body style="background-color:#dcdcdc ;">
@@ -76,34 +87,39 @@
                                 <label class="form-label">
                                     Data Inicial
                                 </label>
-                                <input type="date" class="form-control dataInicialPesquisa" id="dataInicialPesquisa" style="text-align :center;">
+                                <input value="<?= $dataIniciomes ?>" type="date" class="form-control dataInicialPesquisa" id="dataInicialPesquisa" style="text-align :center;">
+
                             </div>
                             <div class="col-lg-2">
                                 <label class="form-label">
                                     Data Final
                                 </label>
-                                <input type="date" class="form-control dataFinalPesquisa" id="dataFinalPesquisa" style="text-align :center;">
+                                <input value="<?= $dataFimMes ?>" type="date" class="form-control dataFinalPesquisa" id="dataFinalPesquisa" style="text-align :center;">
                             </div>
                             <div class="col-lg-2">
                                 <label class="form-label">
                                     Status
                                 </label>
                                 <select id="status" class="form-control">
-                                    <option></option>
-                                    <option value="4">Todos</option>
-                                    <option value="5">five</option>
-                                    <option value="6">six</option>
+
+                                    <option value="Pendente">Pendente</option>
+                                    <option value="Enviado">Enviado</option>
+                                    <option value="Concluído">Concluído</option>
+
                                 </select>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-4">
                                 <label class="form-label">
                                     Tipo Contrato
                                 </label>
                                 <select id="tipoContrato" class="form-control">
-                                    <option></option>
-                                    <option value="4">Sellin</option>
-                                    <option value="5">five</option>
-                                    <option value="6">six</option>
+                                    <?php
+                                    foreach ($tipoDeContrato as $row) :
+                                    ?>
+                                        <option value="<?= $row["CODTIPOACORDO"] ?>"><?= $row["DESCRICAO"] ?></option>
+                                    <?php
+                                    endforeach
+                                    ?>
                                 </select>
                             </div>
                             <div class="col-lg-2" style="margin-top: 30px;">
@@ -119,128 +135,89 @@
 
             <div class="col-lg-12">
                 <div class="card" style="margin-top: 1.2rem;">
-                    <div style="font-weight: bold; background-color: #00a550; color:white" class="text-center card-header">Acompanhamentos Acordos</div>
+
                     <div class="card-body">
                         <div class="cadFunc ">
-                            <div class="card-body ">
-
-                                <div id="tabelaAcompanhamentosAcordos">
-                                    <table id="tabelaAcompanhamentoAcordo" class="table table-bordered text-center">
-                                        <thead style="background-color: #00a550; color:white">
-                                            <tr>
-                                                <th class="text-center " scope="row">
-                                                    <input class="atrrcheckGerenciar" type="checkbox" value="" id="5">
-                                                </th>
-                                                <th class="ocultar">Identificador</th>
-                                                <th>Tipo</th>
-                                                <th>Valor</th>
-                                                <th>Aberto</th>
-                                                <th>Quitado</th>
-                                                <th>Status</th>
-                                                <th>Abrir</th>
-                                                <th>Recusar</th>
-
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
 
 
+                            <div id="tabelaAcompanhamentosAcordos">
+                                <table id="tabelaAcompanhamentoAcordo" class="table table-bordered text-center">
+                                    <thead style="background-color: #00a550; color:white">
+                                        <tr>
+                                            <th class="text-center " scope="row">
+                                                <input class="atrrcheckGerenciar" type="checkbox" value="" id="5">
+                                            </th>
+
+                                            <th>Tipo</th>
+                                            <th>Valor</th>
+                                            <th>Aberto</th>
+                                            <th>Quitado</th>
+                                            <th>Status</th>
+                                            <th>Abrir</th>
+                                            <th>Recusar</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <?php
+
+                                        foreach ($buscarAcordoPorTipo as $row) :
+                                        ?>
                                             <tr>
                                                 <td class="text-center ">
                                                     <input class="check " type="checkbox" value="" id="6">
                                                 </td>
-                                                <td class="id ocultar">111</td>
-                                                <td class="Tipo">Bonificação</td>
-                                                <td contenteditable="true" class="valor"> R$800,00 </td>
-                                                <td class="Aberto">R$800,00</td>
-                                                <td class="Quitado">R$ 00,00</td>
+
+                                                <td class="Tipo"><?= $row["DESCRICAO"] ?></td>
+                                                <td contenteditable="true" class="valor"> <?= $row["VLRTOTAL"] ?> </td>
+                                                <td class="Aberto"></td>
+                                                <td class="Quitado"></td>
                                                 <td class="Status">Pendente</td>
-                                                <td class="Abrir"><i class="fas fa-external-link-alt"></i></td>
+                                                <td class="Abrir" id="Abrir"><i class="fas fa-external-link-alt"></i></td>
                                                 <td><a href="#" style="font-size:20px; color:red" class="delete"><i class="fas fa-times"></i></a></td>
 
 
                                             </tr>
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check" type="checkbox" value="" id="7">
-                                                </td>
-                                                <td class="id ocultar">112</td>
-                                                <td class="Tipo">Inauguração</td>
-                                                <td contenteditable="true" class="valor">R$ 1500,00</td>
-                                                <td class="Aberto">R$ 1500,00</td>
-                                                <td class="Quitado">R$ 00,00</td>
-                                                <td class="Status">Pendente</td>
-                                                <td class="Abrir"><i class="fas fa-external-link-alt"></i></td>
-                                                <td><a href="#" style="font-size:20px; color:red" class="delete"><i class="fas fa-times"></i></a></td>
+                                        <?php
+                                        endforeach
+                                        ?>
 
+                                    </tbody>
+                                </table>
 
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check" type="checkbox" value="" id="8">
-                                                </td>
-                                                <td class="id ocultar">113</td>
-                                                <td class="Tipo">Despesa</td>
-                                                <td contenteditable="true" class="valor">R$ 2500,00</td>
-                                                <td class="Aberto">R$ 2500,00</td>
-                                                <td class="Quitado">R$ 00,00</td>
-                                                <td class="Status">Pendente</td>
-                                                <td class="Abrir"><i class="fas fa-external-link-alt"></i></td>
-                                                <td><a href="#" style="font-size:20px; color:red" class="delete"><i class="fas fa-times"></i></a></td>
+                            </div>
 
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check" type="checkbox" value="" id="9">
-                                                </td>
-                                                <td class="id ocultar">114</td>
-                                                <td class="Tipo">Manutenção</td>
-                                                <td contenteditable="true" class="valor">R$ 750,00</td>
-                                                <td class="Aberto">R$ 500,00</td>
-                                                <td class="Quitado">R$ 250,00</td>
-                                                <td class="Status">Enviado</td>
-                                                <td class="Abrir"><i class="fas fa-external-link-alt"></i></td>
-                                                <td><a href="#" style="font-size:20px; color:red" class="delete"><i class="fas fa-times"></i></a></td>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <label> Total Pendente:
+                                    </label>
+                                    <input class="form-control" type="number">
+                                </div>
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-2">
+                                    <label> Sub Total:
+                                    </label>
+                                    <input class="form-control" min="0" type="number">
+                                </div>
+                                <div class="col-lg-2">
+                                    <label> Total Filtrado:
+                                    </label>
+                                    <input class="form-control" type="number">
+                                </div>
+                                <div class="col-lg-3 pt-4">
 
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
+                                    <button type="button" id="aceitarAcompanhamentoAcordo" style="margin-top:10px;" class="btn btnverde"> Aceitar</button>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-lg-2">
-                                        <label> Total Pendente:
-                                        </label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                    <div class="col-lg-2"></div>
-                                    <div class="col-lg-2">
-                                        <label> Sub Total:
-                                        </label>
-                                        <input class="form-control" min="0" type="number">
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label> Total Filtrado:
-                                        </label>
-                                        <input class="form-control" type="number">
-                                    </div>
-                                    <div class="col-lg-3 pt-4">
 
-                                        <button type="button" id="aceitarAcompanhamentoAcordo" style="margin-top:10px;" class="btn btnverde"> Aceitar</button>
-                                    </div>
-
-
-
-
-
-                                </div>
 
 
 
                             </div>
+
+
+
 
                             <!-- <div class="col-12-lg" style="text-align:center"> -->
 
@@ -260,7 +237,7 @@
 
 </body>
 <script type="text/javascript" src="../BASE/mdb/js/jquery.min.js"></script>
-<script src="js/script_fornecedores.js"></script>
+<script type="module" src="js/script_fornecedores.js"></script>
 <!-- <script type="text/javascript" src="mdb/js/mdb.min.js"></script> -->
 <!-- <script type="text/javascript" src="../BASE/mdb/js/bootstrap.min.js"></script> -->
 <script type="text/javascript" src="bootstrap-5.0.2/js/bootstrap.min.js"></script>
