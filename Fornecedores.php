@@ -80,7 +80,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card" style="margin-top: 1.2rem;">
-                    <div style="font-weight: bold; background-color: #00a550; color:white" class="text-center card-header">Filtro</div>
+                    <div style="font-weight: bold; background-color: #00a550; color:white" class="text-center card-header">FILTRO</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-2">
@@ -141,7 +141,7 @@
 
 
                             <div id="tabelaAcompanhamentosAcordos">
-                                <table id="tabelaAcompanhamentoAcordo" class="table table-bordered text-center">
+                                <table id="tabelaAcompanhamentoAcordo" class="table table-bordered text-center table-striped">
                                     <thead style="background-color: #00a550; color:white">
                                         <tr>
                                             <th class="text-center " scope="row">
@@ -149,6 +149,7 @@
                                             </th>
 
                                             <th>Tipo</th>
+                                            <th>Fornecedor</th>
                                             <th>Valor</th>
                                             <th>Aberto</th>
                                             <th>Quitado</th>
@@ -164,13 +165,13 @@
 
                                         foreach ($buscarAcordoPorTipo as $row) :
                                         ?>
-                                            <tr>
+                                            <tr class="tr">
                                                 <td class="text-center ">
-                                                    <input class="check " type="checkbox" value="" id="6">
+                                                    <input class="check" type="checkbox" value="<?= $row["CODTIPOACORDO"] ?>" id="6">
                                                 </td>
-
                                                 <td class="Tipo"><?= $row["DESCRICAO"] ?></td>
-                                                <td contenteditable="true" class="valor"> <?= $row["VLRTOTAL"] ?> </td>
+                                                <td class="SEQFORNECEDOR"><?= $row["SEQFORNECEDOR"] ?></td>
+                                                <td contenteditable="false" class="valor"> <?= $row["VLRTOTAL"] ?> </td>
                                                 <td class="Aberto"></td>
                                                 <td class="Quitado"></td>
                                                 <td class="Status">Pendente</td>
@@ -205,14 +206,6 @@
                                     </label>
                                     <input class="form-control" type="number">
                                 </div>
-                                <div class="col-lg-3 pt-4">
-
-                                    <button type="button" id="aceitarAcompanhamentoAcordo" style="margin-top:10px;" class="btn btnverde"> Aceitar</button>
-                                </div>
-
-
-
-
 
                             </div>
 
@@ -309,7 +302,37 @@
                     columns: [0, ':visible']
                 }
             },
+            {
+                text: 'Aceitar',
+                className: 'promo1',
+                id: 'meuId'
+            },
         ]
 
     });
+
+    var tabela = document.getElementsByTagName("table");
+    //var linhas = tabela.getElementsByClassName("tr");
+    var linhas = $('.tr');
+
+    for (var i = 0; i < linhas.length; i++) {
+        var linha = linhas[i];
+        linha.addEventListener("click", function() {
+            //Adicionar ao atual
+            // selLinha(this, false); //Selecione apenas um
+            selLinha(this, false); //Selecione quantos quiser
+        });
+    }
+
+    function selLinha(linha, multiplos) {
+        if (!multiplos) {
+            var linhas = linha.parentElement.getElementsByTagName("tr");
+            for (var i = 0; i < linhas.length; i++) {
+                var linha_ = linhas[i];
+                linha_.classList.remove("selecionado");
+            }
+        }
+        linha.classList.toggle("selecionado");
+
+    }
 </script>

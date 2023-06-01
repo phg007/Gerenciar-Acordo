@@ -3,7 +3,7 @@ import { criandoHtmlmensagemCarregamento, Toasty } from "../../base/jsGeral.js";
 const buttonPesquisarAcordos = document.getElementById(
   "pesquisarFiltroFornecedores"
 );
-const IconeAbrirdetalhamentoAcordos = document.getElementById("Abrir");
+//const IconeAbrirdetalhamentoAcordos = document.getElementById("Abrir");
 
 class CapturarElementosDOM {
   //  constructor() ;
@@ -57,19 +57,18 @@ buttonPesquisarAcordos.addEventListener("click", () => {
   }
 });
 
-IconeAbrirdetalhamentoAcordos.addEventListener("click", function (d) {
-  var produtopromoc = $(this)
-    .parent()
-    .parent()
-    .parent()
-    .find(".Tipo")
-    .closest(".Tipo")
-    .text();
-  console.log(produtopromoc);
-
+const IconeAbrirdetalhamentoAcordos = $(".Abrir").on("click", function (a) {
   // criandoHtmlmensagemCarregamento("exibir");
+  var check = $(this).parent().find(".check").closest(".check").val();
+  var SEQFORNECEDOR = $(this)
+    .parent()
+    .find(".SEQFORNECEDOR")
+    .closest(".SEQFORNECEDOR")
+    .text();
 
-  //window.location.href = "AbrirAcordo.php";
+  window.location.href =
+    "AbrirAcordo.php?codAcordo=" + check + "&seqFornecedor=" + SEQFORNECEDOR;
+  console.log(SEQFORNECEDOR);
 });
 
 $("#aceitarAcompanhamentoAcordo").on("click", function (a) {
