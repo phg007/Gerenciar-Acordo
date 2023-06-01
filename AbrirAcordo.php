@@ -43,7 +43,13 @@ include "../base/conexao_teste.php";
 //include "../BASE/conexao_tovs.php";
 // include "../BASE/menulateral.php";
 include "../MobileNav/docs/index_menucomlogin.php";
+include "config/php/fornecedoresCrud.php";
 $loja = $_SESSION['LOJA'];
+
+$acordos = new Acordo();
+$codAcordo = $_GET["codAcordo"];
+$seqFonecedor = $_GET["seqFornecedor"];
+$buscarAcordosPorCodPorFornecedor = $acordos->buscarAcordoPorCodFornecedor($oracle, $codAcordo, $seqFonecedor)
 //   echo $loja;
 ?>
 
@@ -102,73 +108,36 @@ $loja = $_SESSION['LOJA'];
                                                 <th>Quitado</th>
                                                 <th>Status</th>
                                                 <th>Visualizar</th>
-                                                <th>Modal</th>
+                                                <th>Detalhes</th>
                                                 <th>Recusar</th>
 
                                             </tr>
                                         </thead>
 
                                         <tbody>
+                                            <?php
+                                            foreach ($buscarAcordosPorCodPorFornecedor as $row) :
+                                            ?>
+
+                                                <tr>
+                                                    <td class="text-center ">
+                                                        <input class="check  " type="checkbox" value="" id="6">
+                                                    </td>
+                                                    <td class="NumAcordo id"><?= $row["NROACORDO"] ?></td>
+                                                    <td contenteditable="false" class="Valor"> <?= $row["VLRACORDO"] ?> </td>
+                                                    <td class="Aberto"><?= $row["VLRABERTO"] ?></td>
+                                                    <td class="Quitado"><?= $row["VLRQUITADO"] ?></td>
+                                                    <td class="Status">Pendente</td>
+                                                    <td class="print"><i class="fa-solid fa-print"></i></td>
+                                                    <td class="open"> <i class="fas fa-external-link-square-alt"></i></td>
+                                                    <td class="recusar"><i class="fas fa-times" style="color:red"></i></i></td>
 
 
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check  " type="checkbox" value="" id="6">
-                                                </td>
-                                                <td class="NumAcordo id">XXXXx</td>
-                                                <td contenteditable="true" class="Valor"> R$800,00 </td>
-                                                <td class="Aberto">Não informado</td>
-                                                <td class="Quitado">R$0,00</td>
-                                                <td class="Status">Pendente</td>
-                                                <td class="print"><i class="fa-solid fa-print"></i></td>
-                                                <td class="open"> <i class="fas fa-external-link-square-alt"></i></td>
-                                                <td class="recusar"><i class="fas fa-times" style="color:red"></i></i></td>
+                                                </tr>
+                                            <?php
+                                            endforeach
+                                            ?>
 
-
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check " type="checkbox" value="" id="7">
-                                                </td>
-                                                <td class="NumAcordo">XXXXx</td>
-                                                <td contenteditable="true" class="Valor">R$ 1500,00</td>
-                                                <td class="Aberto">R$ 1500,00</td>
-                                                <td class="Quitado">R$0,00</td>
-                                                <td class="Status">Pendente</td>
-                                                <td class="print"><i class="fa-solid fa-print"></i></td>
-                                                <td class="open"> <i class="fas fa-external-link-square-alt"></i></td>
-                                                <td class="recusar"><i class="fas fa-times" style="color:red"></i></i></td>
-
-
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check " type="checkbox" value="" id="8">
-                                                </td>
-                                                <td class="NumAcordo">XXXXx</td>
-                                                <td contenteditable="true" class="Valor">R$ 2500,00</td>
-                                                <td class="Aberto">Não informado</td>
-                                                <td class="Quitado">R$0,00</td>
-                                                <td class="Status">Pendente</td>
-                                                <td class="print"><i class="fa-solid fa-print"></i></td>
-                                                <td class="open"> <i class="fas fa-external-link-square-alt"></i></td>
-                                                <td class="recusar"><i class="fas fa-times" style="color:red"></i></i></td>
-
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center ">
-                                                    <input class="check " type="checkbox" value="" id="9">
-                                                </td>
-                                                <td class="NumAcordo">XXXXx</td>
-                                                <td contenteditable="true" class="Valor">R$ 750,00</td>
-                                                <td class="Aberto">R$ 500,00</td>
-                                                <td class="Quitado">R$0,00</td>
-                                                <td class="Status">Pendente</td>
-                                                <td class="print"><i class="fa-solid fa-print"></i></td>
-                                                <td class="open"> <i class="fas fa-external-link-square-alt"></i></td>
-                                                <td class="recusar"><i class="fas fa-times" style="color:red"></i></i></td>
-
-                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -294,6 +263,10 @@ $loja = $_SESSION['LOJA'];
                 exportOptions: {
                     columns: [0, ':visible']
                 }
+            },
+            {
+                text: 'Gerar',
+                className: 'promo1'
             },
             'colvis'
         ]
