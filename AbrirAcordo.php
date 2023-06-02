@@ -102,14 +102,16 @@ $buscarAcordosPorCodPorFornecedor = $acordos->buscarAcordoPorCodFornecedor($orac
                                                 <th class="text-center " scope="row">
                                                     <input class="atrrcheckGerenciar" type="checkbox" value="" id="5">
                                                 </th>
-                                                <th>Nº acordos</th>
-                                                <th>Valor</th>
-                                                <th>Aberto</th>
-                                                <th>Quitado</th>
-                                                <th>Status</th>
-                                                <th>Visualizar</th>
-                                                <th>Detalhes</th>
-                                                <th>Recusar</th>
+                                                <th>Nº ACORDOS</th>
+                                                <th>NROEMPRESA</th>
+                                                <th>FORNECEDOR</th>
+                                                <th>VALOR</th>
+                                                <th>ABERTO</th>
+                                                <th>QUITADO</th>
+                                                <th>STATUS</th>
+                                                <th>VISUALIZAR</th>
+                                                <th>DETALHES</th>
+                                                <th>RECUSAR</th>
 
                                             </tr>
                                         </thead>
@@ -119,11 +121,13 @@ $buscarAcordosPorCodPorFornecedor = $acordos->buscarAcordoPorCodFornecedor($orac
                                             foreach ($buscarAcordosPorCodPorFornecedor as $row) :
                                             ?>
 
-                                                <tr>
+                                                <tr class="tr">
                                                     <td class="text-center ">
                                                         <input class="check  " type="checkbox" value="" id="6">
                                                     </td>
                                                     <td class="NumAcordo id"><?= $row["NROACORDO"] ?></td>
+                                                    <td class="NROEMPRESA"><?= $row["NROEMPRESA"] ?></td>
+                                                    <td class="SEQFORNECEDOR"><?= $row["SEQFORNECEDOR"] ?></td>
                                                     <td contenteditable="false" class="Valor"> <?= $row["VLRACORDO"] ?> </td>
                                                     <td class="Aberto"><?= $row["VLRABERTO"] ?></td>
                                                     <td class="Quitado"><?= $row["VLRQUITADO"] ?></td>
@@ -164,9 +168,7 @@ $buscarAcordosPorCodPorFornecedor = $acordos->buscarAcordoPorCodFornecedor($orac
                                         </label>
                                         <input class="form-control" type="number">
                                     </div>
-                                    <div class="col-lg-2 pt-4" style="margin-top: 12px;">
-                                        <button type="button" id="aprovarAcordo" class="btn btnverde">Aprovar</button>
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -265,11 +267,96 @@ $buscarAcordosPorCodPorFornecedor = $acordos->buscarAcordoPorCodFornecedor($orac
                 }
             },
             {
-                text: 'Gerar',
-                className: 'promo1'
+                text: 'Aceitar',
+                className: 'aceitar'
             },
             'colvis'
         ]
 
+    });
+
+    $(".aceitar").on("click", function() {
+        alert(0);
+        let verificarChecked = 0;
+
+        var checkede = $(".check")
+            .toArray()
+            .map(function(checkede) {
+                let checkar = $(checkede).is(":checked");
+                if (checkar == true) {
+                    verificarChecked = 1;
+                }
+            });
+        if (verificarChecked == 0) {} else {
+            const NumAcordo = $(".check:checked")
+                .parent()
+                .parent()
+                .find(".NumAcordo")
+                .closest(".NumAcordo")
+                .toArray()
+                .map(function(NumAcordo) {
+                    return $(NumAcordo).text();
+                });
+            const Valor = $(".check:checked")
+                .parent()
+                .parent()
+                .find(".Valor")
+                .closest(".Valor")
+                .toArray()
+                .map(function(Valor) {
+                    return $(Valor).text();
+                });
+
+            const SEQFORNECEDOR = $(".check:checked")
+                .parent()
+                .parent()
+                .find(".SEQFORNECEDOR")
+                .closest(".SEQFORNECEDOR")
+                .toArray()
+                .map(function(SEQFORNECEDOR) {
+                    return $(SEQFORNECEDOR).text();
+                });
+            const NROEMPRESA = $(".check:checked")
+                .parent()
+                .parent()
+                .find(".NROEMPRESA")
+                .closest(".NROEMPRESA")
+                .toArray()
+                .map(function(NROEMPRESA) {
+                    return $(NROEMPRESA).text();
+                });
+            const Status = $(".check:checked")
+                .parent()
+                .parent()
+                .find(".Status")
+                .closest(".Status")
+                .toArray()
+                .map(function(Status) {
+                    return $(Status).text();
+                });
+
+            // criandoHtmlmensagemCarregamento("exibir");
+            $.ajax({
+                url: "config/aceitarAcordoDetalhado.php",
+                method: "get",
+                data: "NumAcordo=" +
+                    NumAcordo +
+                    "&Valor=" +
+                    Valor +
+                    "&SEQFORNECEDOR=" +
+                    SEQFORNECEDOR +
+                    "&NROEMPRESA=" +
+                    NROEMPRESA,
+                success: function(retorno) {
+                    if (retorno == "1") {
+                        // Toasty("Atenção", "Acordo aceito com sucesso", "#00a550");
+                    } else {
+                        // Toasty("Atenção", "Erro ao Aceitar o Acordo", "#E20914");
+                    }
+                    //$("#tabelaAcompanhamentosAcordos").empty().html(retorno);
+                    // criandoHtmlmensagemCarregamento("ocultar");
+                },
+            });
+        }
     });
 </script>

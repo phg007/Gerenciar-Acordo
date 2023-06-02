@@ -31,7 +31,6 @@
     </head>
     <?php
     include "../base/conexao_martdb.php";
-    include "../BASE/conexao_tovs.php";
     include "../MobileNav/docs/index_menucomlogin.php";
     include "config/php/fornecedoresCrud.php";
     //$buscarAcordoPorTipo = buscarAcordoPorTipo($oracle);
@@ -87,14 +86,14 @@
                                 <label class="form-label">
                                     Data Inicial
                                 </label>
-                                <input value="<?= $dataIniciomes ?>" type="date" class="form-control dataInicialPesquisa" id="dataInicialPesquisa" style="text-align :center;">
+                                <input value="<?= $dataIniciomes ?>" type="date" class="form-control dataInicialPesquisa" id="dataInicialPesquisa">
 
                             </div>
                             <div class="col-lg-2">
                                 <label class="form-label">
                                     Data Final
                                 </label>
-                                <input value="<?= $dataFimMes ?>" type="date" class="form-control dataFinalPesquisa" id="dataFinalPesquisa" style="text-align :center;">
+                                <input value="<?= $dataFimMes ?>" type="date" class="form-control dataFinalPesquisa" id="dataFinalPesquisa">
                             </div>
                             <div class="col-lg-2">
                                 <label class="form-label">
@@ -103,8 +102,10 @@
                                 <select id="status" class="form-control">
 
                                     <option value="Pendente">Pendente</option>
-                                    <option value="Enviado">Enviado</option>
-                                    <option value="Concluído">Concluído</option>
+                                    <option value="Enviado">Aceito</option>
+                                    <option value="Enviado">Aceito Parcialmente</option>
+                                    <option value="Concluído">Quitado</option>
+                                    <option value="Concluído">Quitado Parcialmente</option>
 
                                 </select>
                             </div>
@@ -116,7 +117,7 @@
                                     <?php
                                     foreach ($tipoDeContrato as $row) :
                                     ?>
-                                        <option value="<?= $row["CODTIPOACORDO"] ?>"><?= $row["DESCRICAO"] ?></option>
+                                        <option value="<?= $row["TIPO"] ?>"><?= $row["TIPO"] ?></option>
                                     <?php
                                     endforeach
                                     ?>
@@ -142,20 +143,23 @@
 
                             <div id="tabelaAcompanhamentosAcordos">
                                 <table id="tabelaAcompanhamentoAcordo" class="table table-bordered text-center table-striped">
+                                    <input type="hidden" value="<?= $dataIniciomes ?>" id="dataini">
+                                    <input type="hidden" value="<?= $dataFimMes ?>" id="datafim">
                                     <thead style="background-color: #00a550; color:white">
                                         <tr>
                                             <th class="text-center " scope="row">
                                                 <input class="atrrcheckGerenciar" type="checkbox" value="" id="5">
                                             </th>
+                                            <th>COD</th>
+                                            <th>TIPO</th>
 
-                                            <th>Tipo</th>
-                                            <th>Fornecedor</th>
-                                            <th>Valor</th>
-                                            <th>Aberto</th>
-                                            <th>Quitado</th>
-                                            <th>Status</th>
-                                            <th>Abrir</th>
-                                            <th>Recusar</th>
+                                            <th>FORNECEDOR</th>
+                                            <th>VALOR</th>
+                                            <th>ABERTO</th>
+                                            <th>QUITADO</th>
+                                            <th>STATUS</th>
+                                            <th>ABRIR</th>
+                                            <th>RECUSAR</th>
 
                                         </tr>
                                     </thead>
@@ -169,9 +173,10 @@
                                                 <td class="text-center ">
                                                     <input class="check" type="checkbox" value="<?= $row["CODTIPOACORDO"] ?>" id="6">
                                                 </td>
+                                                <td class="cod"><?= $row["CODTIPOACORDO"] ?></td>
                                                 <td class="Tipo"><?= $row["DESCRICAO"] ?></td>
                                                 <td class="SEQFORNECEDOR"><?= $row["SEQFORNECEDOR"] ?></td>
-                                                <td contenteditable="false" class="valor"> <?= $row["VLRTOTAL"] ?> </td>
+                                                <td contenteditable="true" class="valor"> <?= $row["VLRTOTAL"] ?> </td>
                                                 <td class="Aberto"></td>
                                                 <td class="Quitado"></td>
                                                 <td class="Status">Pendente</td>
@@ -189,7 +194,7 @@
 
                             </div>
 
-                            <div class="row">
+                            <div class="row" style="display:none">
                                 <div class="col-lg-2">
                                     <label> Total Pendente:
                                     </label>
@@ -304,7 +309,7 @@
             },
             {
                 text: 'Aceitar',
-                className: 'promo1',
+                className: 'aceitar',
                 id: 'meuId'
             },
         ]

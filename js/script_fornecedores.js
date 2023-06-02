@@ -5,12 +5,6 @@ const buttonPesquisarAcordos = document.getElementById(
 );
 //const IconeAbrirdetalhamentoAcordos = document.getElementById("Abrir");
 
-class CapturarElementosDOM {
-  //  constructor() ;
-
-  elementos() {}
-}
-
 const buscarAcordosFiltrados = (
   dataInicial,
   dataFinal,
@@ -32,6 +26,32 @@ const buscarAcordosFiltrados = (
       tipoContrato,
     success: function (promocao) {
       $("#tabelaAcompanhamentosAcordos").empty().html(promocao);
+      criandoHtmlmensagemCarregamento("ocultar");
+    },
+  });
+};
+
+const AceitarAcordos = (dataInicial, dataFinal, fornecedor, tipoacordo) => {
+  criandoHtmlmensagemCarregamento("exibir");
+  $.ajax({
+    url: "config/aceitarAcordo.php",
+    method: "get",
+    data:
+      "dataInicio=" +
+      dataInicial +
+      "&dataFim=" +
+      dataFinal +
+      "&fornecedor=" +
+      fornecedor +
+      "&tipoacordo=" +
+      tipoacordo,
+    success: function (retorno) {
+      if (retorno == "1") {
+        Toasty("Atenção", "Acordo aceito com sucesso", "#00a550");
+      } else {
+        Toasty("Atenção", "Erro ao Aceitar o Acordo", "#E20914");
+      }
+      //$("#tabelaAcompanhamentosAcordos").empty().html(retorno);
       criandoHtmlmensagemCarregamento("ocultar");
     },
   });
@@ -71,7 +91,7 @@ const IconeAbrirdetalhamentoAcordos = $(".Abrir").on("click", function (a) {
   console.log(SEQFORNECEDOR);
 });
 
-$("#aceitarAcompanhamentoAcordo").on("click", function (a) {
+const aceitarAcordo = $(".aceitar").on("click", function (a) {
   let verificarChecked = 0;
   var checkede = $(".check")
     .toArray()
@@ -83,71 +103,32 @@ $("#aceitarAcompanhamentoAcordo").on("click", function (a) {
       }
     });
   if (verificarChecked == 0) {
-    const toast = document.querySelector(".toast_2"),
-      progress_2 = document.querySelector(".progress_2");
-
-    toast.classList.remove("ocultar");
-
-    progress_2.classList.remove("ocultar");
-
-    $(".toast_2").removeClass("ocultar");
-
-    timer1 = setTimeout(() => {
-      toast.classList.add("ocultar");
-
-      $(".toast_2").addClass("ocultar");
-    }, 2000);
+    Toasty("Atenção", "Nenhum Acordo selecionado", "#E20914");
   } else {
-    let Tipo = $(".check:checked")
+    const SEQFORNECEDOR = $(".check:checked")
       .parent()
       .parent()
-      .find(".Tipo")
-      .closest(".Tipo")
+      .find(".SEQFORNECEDOR")
+      .closest(".SEQFORNECEDOR")
       .toArray()
-      .map(function (Tipo) {
-        return $(Tipo).text();
+      .map(function (SEQFORNECEDOR) {
+        return $(SEQFORNECEDOR).text();
       });
-    let valor = $(".check:checked")
+
+    const dataini = document.getElementById("dataini").value;
+    const datafim = document.getElementById("datafim").value;
+
+    const check = $(".check:checked")
       .parent()
-      .parent()
-      .find(".valor")
-      .closest(".valor")
+      .find(".check")
+      .closest(".check")
       .toArray()
-      .map(function (valor) {
-        return $(valor).text();
+      .map(function (check) {
+        return $(check).val();
       });
-    let aberto = $(".check:checked")
-      .parent()
-      .parent()
-      .find(".Aberto")
-      .closest(".Aberto")
-      .toArray()
-      .map(function (Aberto) {
-        return $(Aberto).text();
-      });
-    let Quitado = $(".check:checked")
-      .parent()
-      .parent()
-      .find(".Quitado")
-      .closest(".Quitado")
-      .toArray()
-      .map(function (Quitado) {
-        return $(Quitado).text();
-      });
-    let Status = $(".check:checked")
-      .parent()
-      .parent()
-      .find(".Status")
-      .closest(".Status")
-      .toArray()
-      .map(function (Status) {
-        return $(Status).text();
-      });
-    console.log(Tipo);
-    console.log(valor);
-    console.log(aberto);
-    console.log(Quitado);
-    console.log(Status);
+    AceitarAcordos(dataini, datafim, SEQFORNECEDOR, check);
+
+    console.log(SEQFORNECEDOR, check);
   }
 });
 
